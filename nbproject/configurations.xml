@@ -87,7 +87,7 @@
         <ccTool>
           <standard>8</standard>
           <incDir>
-            <pElem>/home/kdupreez/sources</pElem>
+            <pElem>/home/nvidia/ml</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
