@@ -20,7 +20,7 @@
                     <type>1</type>
                 </confElem>
                 <confElem>
-                    <name>Debug_Linux2</name>
+                    <name>Debug_Jetson</name>
                     <type>1</type>
                 </confElem>
             </confList>

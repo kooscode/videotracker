@@ -22,14 +22,14 @@ CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/videotracker
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux/package
 CND_PACKAGE_NAME_Release=videotracker.tar
 CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/videotracker.tar
-# Debug_Linux2 configuration
-CND_PLATFORM_Debug_Linux2=GNU-Linux
-CND_ARTIFACT_DIR_Debug_Linux2=dist/Debug_Linux2/GNU-Linux
-CND_ARTIFACT_NAME_Debug_Linux2=videotracker
-CND_ARTIFACT_PATH_Debug_Linux2=dist/Debug_Linux2/GNU-Linux/videotracker
-CND_PACKAGE_DIR_Debug_Linux2=dist/Debug_Linux2/GNU-Linux/package
-CND_PACKAGE_NAME_Debug_Linux2=videotracker.tar
-CND_PACKAGE_PATH_Debug_Linux2=dist/Debug_Linux2/GNU-Linux/package/videotracker.tar
+# Debug_Jetson configuration
+CND_PLATFORM_Debug_Jetson=GNU-Linux
+CND_ARTIFACT_DIR_Debug_Jetson=dist/Debug_Jetson/GNU-Linux
+CND_ARTIFACT_NAME_Debug_Jetson=videotracker
+CND_ARTIFACT_PATH_Debug_Jetson=dist/Debug_Jetson/GNU-Linux/videotracker
+CND_PACKAGE_DIR_Debug_Jetson=dist/Debug_Jetson/GNU-Linux/package
+CND_PACKAGE_NAME_Debug_Jetson=videotracker.tar
+CND_PACKAGE_PATH_Debug_Jetson=dist/Debug_Jetson/GNU-Linux/package/videotracker.tar
 #
 # include compiler specific variables
 #
