@@ -52,13 +52,13 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=`pkg-config --libs opencv` /home/kdupreez/sources/darknet/darknet.so  
+LDLIBSOPTIONS=`pkg-config --libs opencv` /home/nvidia/ml/darknet/darknet.so  
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/videotracker
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/videotracker: /home/kdupreez/sources/darknet/darknet.so
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/videotracker: /home/nvidia/ml/darknet/darknet.so
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/videotracker: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}

@@ -94,7 +94,7 @@
           <commandlineTool>g++</commandlineTool>
           <linkerLibItems>
             <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
-            <linkerLibFileItem>/home/kdupreez/sources/darknet/darknet.so</linkerLibFileItem>
+            <linkerLibFileItem>/home/nvidia/ml/darknet/darknet.so</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
