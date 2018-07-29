@@ -60,7 +60,7 @@ int main(int argc, char** argv)
     
     
     //Neural Network Model and Weights
-    string net_config = "/home/nvidia/ml/prod/net-yolov2-voc-spongebob.cfg";
+    string net_config = "/home/nvidia/ml/prod/cfg/net-yolov2-voc-spongebob.cfg";
     string net_weights = "/home/nvidia/ml/prod/weights/net-yolov2-voc-spongebob.weights"; 
     //Neural Network Model and Weights
     
@@ -162,7 +162,15 @@ int main(int argc, char** argv)
     //Tracking Loop..
     for ( ;; )
     {
-        //draw tracked boxes..
+        //draw tracked boxes
+        vector<bbox_t> bboxes_detected_yolo = yolov2->detect(frame, 0.20f);  
+        for (auto bbox : bboxes_detected_yolo)
+        {
+            cv::Point obj_box_tl = cv::Point(bbox.x, bbox.y);
+            cv::Point obj_box_br = cv::Point(bbox.x + bbox.w, bbox.y + bbox.h);
+            cv::rectangle(frame, obj_box_tl, obj_box_br, cv::Scalar(0x00, 0x00, 0xff), 4, 8, 0 );            
+        }
+        
         
         if (tracker_objects.size() > 0)
         {
