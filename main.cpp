@@ -25,12 +25,12 @@ int main(int argc, char** argv)
     //Set Desired Image Resolution
 
     //1080
-//    uint32_t ref_w = 1920;
-//    uint32_t ref_h = 1080;
+    uint32_t ref_w = 1920;
+    uint32_t ref_h = 1080;
 
     //720
-    uint32_t ref_w = 1280;
-    uint32_t ref_h = 720;
+  //  uint32_t ref_w = 1280;
+ //   uint32_t ref_h = 720;
     
     uint32_t cam_w = ref_w;
     uint32_t cam_h = ref_h;
@@ -59,13 +59,16 @@ int main(int argc, char** argv)
     }
     
     
-    
     //Neural Network Model and Weights
-    string net_config = "/home/koos/ml/prod/cfg/net-yolov2-voc.cfg";
-    string net_weights = "/home/koos/ml/prod/weights/net-yolov2-voc-train_promixal-testbed.weights"; 
-
+    string net_config = "/home/nvidia/ml/prod/net-yolov2-voc-spongebob.cfg";
+    string net_weights = "/home/nvidia/ml/prod/weights/net-yolov2-voc-spongebob.weights"; 
+    //Neural Network Model and Weights
+    
+//    string net_config = "/home/koos/ml/prod/cfg/net-yolov2-voc.cfg";
+//    string net_weights = "/home/koos/ml/prod/weights/net-yolov2-voc-train_promixal-testbed.weights"; 
+    
     //Create new YoloV2 detector
-    // Detector* yolov2 = new Detector(net_config, net_weights);
+    Detector* yolov2 = new Detector(net_config, net_weights);
      
     //** OPEN CV CUDA TRACKING Objects.
     Tracker_optflow tracker_engine;
