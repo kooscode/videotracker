@@ -23,7 +23,7 @@
 
 using namespace std;
 
-#define MAX_SPEED 190
+#define MAX_SPEED 255
 #define MIN_SPEED 100
 
 struct wheelspeed
