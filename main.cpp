@@ -129,6 +129,7 @@ int main(int argc, char** argv)
     float net_threshold  =  _settings.getvalue_float("network-threshold");
     float net_confidence =  _settings.getvalue_float("network-confidence");
     uint32_t net_framerate = _settings.getvalue_float("network-framerate");
+    float speed_gain = _settings.getvalue_float("speed-gain");
     
     //Create new YoloV2 detector
     Detector* yolov2 = new Detector(net_config, net_weights);
@@ -276,7 +277,10 @@ int main(int argc, char** argv)
                         ws.left_speed = (ws.left_speed < -MAX_SPEED) ? -MAX_SPEED : (ws.left_speed > MAX_SPEED) ? MAX_SPEED : ws.left_speed;
                         ws.right_speed = (ws.right_speed < -MAX_SPEED) ? -MAX_SPEED : (ws.right_speed > MAX_SPEED) ? MAX_SPEED : ws.right_speed;
                         
-                        //TODO: apply gains
+                        //apply gains
+                        ws.left_speed *= speed_gain;
+                        ws.right_speed *= speed_gain;
+                        
                     }
 
                 }             

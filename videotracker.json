@@ -6,5 +6,6 @@
     "network-min-area": 100,    
     "network-framerate": 1,    
 
-    "target-area": 200
+    "target-area": 200,
+    "speed-gain": 1.25
 }
