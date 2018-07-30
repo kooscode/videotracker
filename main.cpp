@@ -24,7 +24,7 @@
 using namespace std;
 
 #define MAX_SPEED 255
-#define MIN_SPEED 0
+#define MIN_SPEED 10
 
 struct wheelspeed
 {
@@ -259,13 +259,13 @@ int main(int argc, char** argv)
                         int turn_correct = target_center.x - track_end.x;
                         if (turn_correct < 0)
                         {
-                            turn_correct = transform_value(abs(turn_correct) * 2, 0, ref_size.width, 0, MAX_SPEED-MIN_SPEED);
+                            turn_correct = transform_value(abs(turn_correct) * 2.5, 0, ref_size.width, MIN_SPEED, MAX_SPEED);
                             ws.left_speed += turn_correct;
                             ws.right_speed -= turn_correct;
                         }
                         else if (turn_correct > 0)
                         {
-                            turn_correct = transform_value(abs(turn_correct) * 2, 0, ref_size.width, 0, MAX_SPEED-MIN_SPEED);
+                            turn_correct = transform_value(abs(turn_correct) * 2.5, 0, ref_size.width, MIN_SPEED, MAX_SPEED);
                             ws.left_speed -= turn_correct;
                             ws.right_speed += turn_correct;
                         }
