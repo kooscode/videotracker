@@ -302,9 +302,9 @@ int main(int argc, char** argv)
                     serial_strstrm << "SLR" << abs(ws.left_speed) <<  std::endl;
                     
                 if (ws.right_speed > 0)
-                    serial_strstrm << "SRF" << abs(ws.right_speed) << "|";
+                    serial_strstrm << "SRF" << abs(ws.right_speed) << std::endl;
                 else
-                    serial_strstrm << "SRR" << abs(ws.right_speed) << "|";
+                    serial_strstrm << "SRR" << abs(ws.right_speed) << std::endl;
                        
                 serial_port.writeString(serial_strstrm.str(), 250);
                 cout << serial_strstrm.str() << std::endl;
