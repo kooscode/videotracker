@@ -23,8 +23,8 @@
 
 using namespace std;
 
-#define MAX_SPEED 150
-#define MIN_SPEED 60
+#define MAX_SPEED 255
+#define MIN_SPEED 0
 
 struct wheelspeed
 {
@@ -296,7 +296,7 @@ int main(int argc, char** argv)
                 serial_strstrm << "SL" << ws.left_speed << "|";
                 serial_strstrm << "SR" << ws.right_speed << "|";
                 serial_port.writeString(serial_strstrm.str(), 250);
-                cout << serial_strstrm.str();
+                cout << serial_strstrm.str() << std::endl;
             }
             
         }
