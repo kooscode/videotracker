@@ -297,9 +297,9 @@ int main(int argc, char** argv)
                 stringstream serial_strstrm;
                 
                 if (ws.left_speed > 0)
-                    serial_strstrm << "SLF" << abs(ws.left_speed) << "|";
+                    serial_strstrm << "SLF" << abs(ws.left_speed) << std::endl;
                 else
-                    serial_strstrm << "SLR" << abs(ws.left_speed) << "|";
+                    serial_strstrm << "SLR" << abs(ws.left_speed) <<  std::endl;
                     
                 if (ws.right_speed > 0)
                     serial_strstrm << "SRF" << abs(ws.right_speed) << "|";
