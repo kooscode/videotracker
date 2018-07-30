@@ -24,7 +24,7 @@
 using namespace std;
 
 #define MAX_SPEED 255
-#define MIN_SPEED 100
+#define MIN_SPEED 125
 
 struct wheelspeed
 {
@@ -275,6 +275,8 @@ int main(int argc, char** argv)
                         //constrain within bounds.
                         ws.left_speed = (ws.left_speed < -MAX_SPEED) ? -MAX_SPEED : (ws.left_speed > MAX_SPEED) ? MAX_SPEED : ws.left_speed;
                         ws.right_speed = (ws.right_speed < -MAX_SPEED) ? -MAX_SPEED : (ws.right_speed > MAX_SPEED) ? MAX_SPEED : ws.right_speed;
+                        
+                        //TODO: apply gains
                     }
 
                 }             
