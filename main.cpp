@@ -23,13 +23,13 @@
 
 using namespace std;
 
-#define MAX_SPEED 255
+#define MAX_SPEED 190
 #define MIN_SPEED 100
 
 struct wheelspeed
 {
-    uint32_t left_speed = 0;
-    uint32_t right_speed = 0;
+    int left_speed = 0;
+    int right_speed = 0;
 };
 
 int transform_value(int value, int min_value, int max_value, int min_transform,  int max_transform)
@@ -259,20 +259,22 @@ int main(int argc, char** argv)
                         int turn_correct = target_center.x - track_end.x;
                         if (turn_correct < 0)
                         {
-                            turn_correct = transform_value(abs(turn_correct) * 2.5, 0, ref_size.width, MIN_SPEED, MAX_SPEED);
+                            turn_correct = transform_value(abs(turn_correct), 0, ref_size.width, MIN_SPEED, MAX_SPEED) - MIN_SPEED;
                             ws.left_speed += turn_correct;
-                            ws.right_speed -= turn_correct;
+                            ws.right_speed -=  turn_correct;
+                            ws.right_speed = (ws.right_speed < MIN_SPEED) ? -MIN_SPEED : ws.right_speed;
                         }
                         else if (turn_correct > 0)
                         {
-                            turn_correct = transform_value(abs(turn_correct) * 2.5, 0, ref_size.width, MIN_SPEED, MAX_SPEED);
-                            ws.left_speed -= turn_correct;
+                            turn_correct = transform_value(abs(turn_correct), 0, ref_size.width, MIN_SPEED, MAX_SPEED) - MIN_SPEED;
                             ws.right_speed += turn_correct;
+                            ws.left_speed -= turn_correct;
+                            ws.left_speed = (ws.left_speed < MIN_SPEED) ? -MIN_SPEED : ws.left_speed;
                         }
 
                         //constrain within bounds.
-                        ws.left_speed = (ws.left_speed < 0) ? 0 : (ws.left_speed > MAX_SPEED) ? MAX_SPEED : ws.left_speed;
-                        ws.right_speed = (ws.right_speed < 0) ? 0 : (ws.right_speed > MAX_SPEED) ? MAX_SPEED : ws.right_speed;
+                        ws.left_speed = (ws.left_speed < -MAX_SPEED) ? -MAX_SPEED : (ws.left_speed > MAX_SPEED) ? MAX_SPEED : ws.left_speed;
+                        ws.right_speed = (ws.right_speed < -MAX_SPEED) ? -MAX_SPEED : (ws.right_speed > MAX_SPEED) ? MAX_SPEED : ws.right_speed;
                     }
 
                 }             
@@ -293,8 +295,17 @@ int main(int argc, char** argv)
             if (usbok && serial_port.isopen)
             {
                 stringstream serial_strstrm;
-                serial_strstrm << "SL" << ws.left_speed << "|";
-                serial_strstrm << "SR" << ws.right_speed << "|";
+                
+                if (ws.left_speed > 0)
+                    serial_strstrm << "SLF" << abs(ws.left_speed) << "|";
+                else
+                    serial_strstrm << "SLR" << abs(ws.left_speed) << "|";
+                    
+                if (ws.right_speed > 0)
+                    serial_strstrm << "SRF" << abs(ws.right_speed) << "|";
+                else
+                    serial_strstrm << "SRR" << abs(ws.right_speed) << "|";
+                       
                 serial_port.writeString(serial_strstrm.str(), 250);
                 cout << serial_strstrm.str() << std::endl;
             }
