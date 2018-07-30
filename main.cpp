@@ -23,8 +23,8 @@
 
 using namespace std;
 
-#define MAX_SPEED 200
-#define MIN_SPEED 80
+#define MAX_SPEED 150
+#define MIN_SPEED 60
 
 struct wheelspeed
 {
@@ -274,10 +274,6 @@ int main(int argc, char** argv)
                         ws.left_speed = (ws.left_speed < MIN_SPEED) ? MIN_SPEED : (ws.left_speed > MAX_SPEED) ? MAX_SPEED : ws.left_speed;
                         ws.right_speed = (ws.right_speed < MIN_SPEED) ? MIN_SPEED : (ws.right_speed > MAX_SPEED) ? MAX_SPEED : ws.right_speed;
                     }
-                    else
-                    {
-                        std::cout << "ON TARGET!" << std::endl;
-                    }
 
                 }             
             }
@@ -300,7 +296,7 @@ int main(int argc, char** argv)
                 serial_strstrm << "SL" << ws.left_speed << "|";
                 serial_strstrm << "SR" << ws.right_speed << "|";
                 serial_port.writeString(serial_strstrm.str(), 250);
-                //cout << serial_string.str();
+                cout << serial_strstrm.str();
             }
             
         }
