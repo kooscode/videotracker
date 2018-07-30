@@ -240,6 +240,8 @@
           <linkerLibItems>
             <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
             <linkerLibFileItem>/home/nvidia/ml/darknet/darknet.so</linkerLibFileItem>
+            <linkerOptionItem>`pkg-config --libs libserialport`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs jsoncpp`</linkerOptionItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
