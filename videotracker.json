@@ -1,0 +1,10 @@
+{
+    "network-config": "/home/koos/ml/prod/cfg/net-yolov2-voc-spongebob.cfg",
+    "network-weights": "/home/koos/ml/yolotrain-spongebob/weights/net-yolov2-voc-train_51200.weights",
+    "network-threshold": 0.20,
+    "network-confidence": 0.50,
+    "network-min-area": 100,    
+    "network-framerate": 1,    
+
+    "target-area": 200
+}

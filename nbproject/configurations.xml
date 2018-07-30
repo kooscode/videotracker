@@ -5,6 +5,28 @@
                    displayName="Header Files"
                    projectFiles="true">
     </logicalFolder>
+    <logicalFolder name="f1" displayName="libterraclear" projectFiles="true">
+      <logicalFolder name="f1" displayName="appsettings" projectFiles="true">
+        <itemPath>../libterraclear/src/appsettings.cpp</itemPath>
+        <itemPath>../libterraclear/src/appsettings.hpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="camera" projectFiles="true">
+        <itemPath>../libterraclear/src/camera_base.cpp</itemPath>
+        <itemPath>../libterraclear/src/camera_base.hpp</itemPath>
+        <itemPath>../libterraclear/src/camera_file.cpp</itemPath>
+        <itemPath>../libterraclear/src/camera_file.hpp</itemPath>
+        <itemPath>../libterraclear/src/camera_usb.cpp</itemPath>
+        <itemPath>../libterraclear/src/camera_usb.hpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="exceptions" projectFiles="true">
+        <itemPath>../libterraclear/src/error_base.cpp</itemPath>
+        <itemPath>../libterraclear/src/error_base.hpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="serial" projectFiles="true">
+        <itemPath>../libterraclear/src/basicserial.cpp</itemPath>
+        <itemPath>../libterraclear/src/basicserial.hpp</itemPath>
+      </logicalFolder>
+    </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
@@ -25,6 +47,7 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>/home/koos/Desktop/Dropbox/Private/Code/cpp/videotracker/.gitignore</itemPath>
       <itemPath>Makefile</itemPath>
+      <itemPath>videotracker.json</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
@@ -48,9 +71,71 @@
           <linkerLibItems>
             <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
             <linkerLibFileItem>/home/koos/ml/darknet/darknet.so</linkerLibFileItem>
+            <linkerOptionItem>`pkg-config --libs jsoncpp`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs libserialport`</linkerOptionItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="../libterraclear/src/appsettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/appsettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/basicserial.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/basicserial.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_base.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_base.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_file.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_file.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_usb.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_usb.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/error_base.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/error_base.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
@@ -74,6 +159,66 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="../libterraclear/src/appsettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/appsettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/basicserial.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/basicserial.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_base.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_base.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_file.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_file.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_usb.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_usb.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/error_base.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/error_base.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
@@ -98,6 +243,66 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="../libterraclear/src/appsettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/appsettings.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/basicserial.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/basicserial.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_base.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_base.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_file.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_file.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_usb.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/camera_usb.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/error_base.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../libterraclear/src/error_base.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="8">
       </item>
     </conf>

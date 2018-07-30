@@ -35,6 +35,12 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/_ext/e1dda48/appsettings.o \
+	${OBJECTDIR}/_ext/e1dda48/basicserial.o \
+	${OBJECTDIR}/_ext/e1dda48/camera_base.o \
+	${OBJECTDIR}/_ext/e1dda48/camera_file.o \
+	${OBJECTDIR}/_ext/e1dda48/camera_usb.o \
+	${OBJECTDIR}/_ext/e1dda48/error_base.o \
 	${OBJECTDIR}/main.o
 
 
@@ -52,7 +58,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=`pkg-config --libs opencv` /home/koos/ml/darknet/darknet.so  
+LDLIBSOPTIONS=`pkg-config --libs opencv` /home/koos/ml/darknet/darknet.so `pkg-config --libs jsoncpp` `pkg-config --libs libserialport`  
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -64,10 +70,40 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/videotracker: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	g++ -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/videotracker ${OBJECTFILES} ${LDLIBSOPTIONS}
 
+${OBJECTDIR}/_ext/e1dda48/appsettings.o: ../libterraclear/src/appsettings.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/home/koos/ml -I/home/kdupreez/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/appsettings.o ../libterraclear/src/appsettings.cpp
+
+${OBJECTDIR}/_ext/e1dda48/basicserial.o: ../libterraclear/src/basicserial.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/home/koos/ml -I/home/kdupreez/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/basicserial.o ../libterraclear/src/basicserial.cpp
+
+${OBJECTDIR}/_ext/e1dda48/camera_base.o: ../libterraclear/src/camera_base.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/home/koos/ml -I/home/kdupreez/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/camera_base.o ../libterraclear/src/camera_base.cpp
+
+${OBJECTDIR}/_ext/e1dda48/camera_file.o: ../libterraclear/src/camera_file.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/home/koos/ml -I/home/kdupreez/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/camera_file.o ../libterraclear/src/camera_file.cpp
+
+${OBJECTDIR}/_ext/e1dda48/camera_usb.o: ../libterraclear/src/camera_usb.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/home/koos/ml -I/home/kdupreez/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/camera_usb.o ../libterraclear/src/camera_usb.cpp
+
+${OBJECTDIR}/_ext/e1dda48/error_base.o: ../libterraclear/src/error_base.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/home/koos/ml -I/home/kdupreez/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/error_base.o ../libterraclear/src/error_base.cpp
+
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/home/koos/ml -I/home/kdupreez/sources `pkg-config --cflags opencv` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -I/home/koos/ml -I/home/kdupreez/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

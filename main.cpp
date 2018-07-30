@@ -1,5 +1,6 @@
 
 #include <cstdlib>
+#include <iostream>
 
 //OPENCV
  #include <opencv2/core/utility.hpp>
@@ -9,31 +10,105 @@
 
 //YOLO V3 INCLUDES - https://github.com/AlexeyAB/darknet
 //compiled for SO/Lib and OPENCV using GPU(Cuda/CuDNN) and GPU Tracking.
-
 #define OPENCV
 #define TRACK_OPTFLOW
 #define GPU
-
 #include <darknet/src/yolo_v2_class.hpp>
 
-// END YOLO V3
+//Requires TerraClear Lib - static includes
+#include "../libterraclear/src/error_base.hpp"
+#include "../libterraclear/src/appsettings.hpp"
+#include "../libterraclear/src/camera_usb.hpp"
+#include "../libterraclear/src/basicserial.hpp"
 
 using namespace std;
 
+#define MAX_SPEED 200
+#define MIN_SPEED 80
+
+struct wheelspeed
+{
+    uint32_t left_speed = 0;
+    uint32_t right_speed = 0;
+};
+
+int transform_value(int value, int min_value, int max_value, int min_transform,  int max_transform)
+{
+    int value_scale = max_value - min_value;
+    int transform_scale = max_transform - min_transform;
+    
+    int retval = (((float)(value - min_value) / value_scale) * transform_scale) + min_transform;
+    
+    return retval;
+}
+
+int boxoverlapcenter(bbox_t srcbox, vector<bbox_t> boxes_all)
+{
+    int overlap_index = -1;
+
+    for (uint32_t i = 0; i < boxes_all.size(); i++)
+    {
+        cv::Rect2d tmprect(srcbox.x, srcbox.y, srcbox.w, srcbox.h);
+        
+        unsigned int centerx = boxes_all[i].x + boxes_all[i].w / 2 ;
+        unsigned int centery = boxes_all[i].y + boxes_all[i].h / 2 ;
+
+        if (tmprect.contains(cv::Point(centerx, centery)))
+        {
+            overlap_index = i;
+            break;
+        }
+
+    }
+    
+    return overlap_index;
+}
+
+
 int main(int argc, char** argv) 
 {
-    //Set Desired Image Resolution
+    
+    //SETUP SERIAL COMMS
+#ifdef __linux__
+    string serial_path = "/dev/ttyUSB0";
+#else
+    string serial_path = "/dev/tty.usbserial-A5047JL0";
+#endif
 
+    //setup serial port..
+    terraclear::basicserial serial_port;
+        
+    bool usbok = false;
+    try
+    {
+        //try to open serial port.
+        serial_port.open(serial_path, terraclear::Baud::BAUD_115200);
+        usbok = true;
+        
+    } 
+    catch (terraclear::error_base err)
+    {
+        std::cout << "Error Opening Serial Port.. " << endl;
+    }
+
+    
+    //init settings.
+    terraclear::appsettings _settings("videotracker.json");
+    
+    //Set Desired Image Resolution/. 
     //1080
-    uint32_t ref_w = 1920;
-    uint32_t ref_h = 1080;
+//    uint32_t ref_w = 1920;
+//    uint32_t ref_h = 1080;
 
-    //720
-  //  uint32_t ref_w = 1280;
- //   uint32_t ref_h = 720;
+//720
+    uint32_t ref_w = 1280;
+    uint32_t ref_h = 960;
     
     uint32_t cam_w = ref_w;
     uint32_t cam_h = ref_h;
+
+    //set image size..
+    cv::Size ref_size = cv::Size(ref_w, ref_h);
     
 
     // show help
@@ -42,30 +117,18 @@ int main(int argc, char** argv)
         " Usage: videotracker <camera index | video_name>\n"
         " examples:\n"
         " videotracker videofile.mp4\n"
+        " videotracker 0\n"
         << endl;
       return 0;
     }
     
-    //split screen for stereo cam
-    bool stereocam = false;
-    if (argc > 2)
-    {
-        std::string stereostr = argv[2];
-        if (stereostr == "s")
-        {
-            stereocam = true;
-            cam_w = ref_w * 2;
-        }
-    }
-    
-    
+
     //Neural Network Model and Weights
-    string net_config = "/home/nvidia/ml/prod/cfg/net-yolov2-voc-spongebob.cfg";
-    string net_weights = "/home/nvidia/ml/prod/weights/net-yolov2-voc-spongebob.weights"; 
-    //Neural Network Model and Weights
-    
-//    string net_config = "/home/koos/ml/prod/cfg/net-yolov2-voc.cfg";
-//    string net_weights = "/home/koos/ml/prod/weights/net-yolov2-voc-train_promixal-testbed.weights"; 
+    string net_config = _settings.getvalue_string("network-config");
+    string net_weights = _settings.getvalue_string("network-weights");
+    float net_threshold  =  _settings.getvalue_float("network-threshold");
+    float net_confidence =  _settings.getvalue_float("network-confidence");
+    uint32_t net_framerate = _settings.getvalue_float("network-framerate");
     
     //Create new YoloV2 detector
     Detector* yolov2 = new Detector(net_config, net_weights);
@@ -81,170 +144,182 @@ int main(int argc, char** argv)
     cv::Scalar color_track_line( 0x00, 0xff, 0x00 );
     
     //Create OpenCV Window
-    char window_name[] = "YoloBox";
+    char window_name[] = "Tracker";
     cv::namedWindow(window_name, cv::WINDOW_NORMAL | cv::WINDOW_FREERATIO);// | WINDOW_AUTOSIZE);
     
-    //frame capture Image
-    cv::Mat frame;
+    //open video camera
+    terraclear::camera_usb usbcam(stoi(argv[1]));
     
-    //Set input video
-    std::string video = argv[1];
-    cv::VideoCapture cap;
+    //frame capture first Image
+    usbcam.update_frames();
+    cv::Mat frame = usbcam.getRGBFrame();
     
-    //set video size..
-    cv::Size ref_size = cv::Size(ref_w, ref_h);
+    //calculate target area square
+    uint32_t target_area = _settings.getvalue_uint("target-area");
+    cv::Point target_tl(ref_w / 2 - target_area / 2,  (ref_h - target_area) - 5);
+    cv::Point target_br(target_tl.x + target_area, target_tl.y + target_area);
+    cv::Point target_center(target_tl.x + target_area / 2, target_tl.y + target_area / 2);
 
-
-    //Open Camera if digits 0,1,2,3 else open file
-    if (video == "0" || video == "1" || video == "2" || video == "3")
-    {
-        if(!cap.open(stoi(video)))
-        {
-            cout << "Could not open video feed." << endl;
-           return 0;
-        }
-        
-        //Set Camera Resolution to specific camera resolution
-        cap.set(3,cam_w);
-        cap.set(4,cam_h);
-    }
-    else
-    {
-      if(!cap.open(video))
-      {
-          cout << "Could not open video feed." << endl;
-         return 0;
-      }  
-    }
     
-    
-    // Stream 1st frame from the video / Camera
-    cap >> frame;
-    
-    //grab only left half of stero image..
-    if (stereocam)
-       frame = frame(cv::Rect(0, 0, frame.cols/2, frame.rows));
-    
-    //Output some info regarding input video 
-    cout << "Input:" << frame.cols << "X" << frame.rows << std::endl;
-
-    //target resize and output info on resized resolution..
-    cv::resize(frame, frame, ref_size);
-    cout << "Scaled:" << frame.cols << "X" << frame.rows << std::endl;
-    
-    
-    // perform the tracking process
-    printf("Start the tracking process, press ESC to quit.\n");
-
-    //tracking box location..
+    //straight line tracking
     bbox_t bbox_start1;
     bbox_start1.x = 100;//ref_w / 2 - 50;
     bbox_start1.y = 50;//ref_h / 2 - 50;
     bbox_start1.w = 100;
     bbox_start1.h = 100;
     bbox_start1.track_id = 1;
-
-    bbox_t bbox_start2;
-    bbox_start2.x = ref_w - 250;
-    bbox_start2.y = 50;//ref_h / 2 - 50;
-    bbox_start2.w = 100;
-    bbox_start2.h = 100;
-    bbox_start2.track_id = 2;
-    
-    //original point1
     cv::Point track_start1(bbox_start1.x + bbox_start1.w / 2, bbox_start1.y + bbox_start1.h / 2);
 
-    //original point2
-    cv::Point track_start2(bbox_start2.x + bbox_start2.w / 2, bbox_start2.y + bbox_start2.h / 2);
-    
-    //add box to tracker..
-    
-    //Tracking Loop..
+    uint32_t framecnt = 0;
+    //Detection & tracking Loop..
     for ( ;; )
     {
-        //draw tracked boxes
-        vector<bbox_t> bboxes_detected_yolo = yolov2->detect(frame, 0.20f);  
-        for (auto bbox : bboxes_detected_yolo)
-        {
-            cv::Point obj_box_tl = cv::Point(bbox.x, bbox.y);
-            cv::Point obj_box_br = cv::Point(bbox.x + bbox.w, bbox.y + bbox.h);
-            cv::rectangle(frame, obj_box_tl, obj_box_br, cv::Scalar(0x00, 0x00, 0xff), 4, 8, 0 );            
-        }
         
-        
-        if (tracker_objects.size() > 0)
-        {
-            for (vector<bbox_t> ::iterator it = tracker_objects.begin(); it != tracker_objects.end(); it++)
-            {        
-                bbox_t bbox = *it;
-
-                //draw detected obj..                    
-                cv::Point obj_box_tl = cv::Point(bbox.x, bbox.y);
-                cv::Point obj_box_br = cv::Point(bbox.x + bbox.w, bbox.y + bbox.h);
-                cv::rectangle(frame, obj_box_tl, obj_box_br, color_tracked, 4, 8, 0 );
-
-                //Line
-                cv::Point track_end(bbox.x + bbox.w / 2, bbox.y + bbox.h / 2);
-                if (bbox.track_id == 1)
-                {
-                    cv::line(frame, track_start1, track_end, color_track_line, 4, 8, 0 );                
-                }
-                else
-                {
-                    cv::line(frame, track_start2, track_end, color_track_line, 4, 8, 0 );               
-                }
-
-            }             
-        }
-        else
-        {
-            tracker_objects.push_back(bbox_start1);            
-            tracker_objects.push_back(bbox_start2);
-        }
-       
-
         // stop the program if no more images
         if((frame.rows > 0) && (frame.cols > 0))
         {
-            
-            // show image with the tracked object
-            cv::imshow(window_name,frame);
+            //motor wheel speed..
+            wheelspeed ws;
+
+            //Scale image..
+            cv::resize(frame, frame, ref_size);
+
+            //track objects.
+            tracker_objects = tracker_engine.tracking_flow(frame);
 
             
-            //get next frame and resize
-            cap >> frame;
+            //Only do detection every X frames..
+            if (framecnt > 0)
+            {
+                framecnt--;
+            }
+            else
+            {
+                framecnt = net_framerate;
+                
+                //detect objects & update tracking data..
+                vector<bbox_t> bboxes_detected_yolo = yolov2->detect(frame, net_threshold);  
+                for (auto bbox : bboxes_detected_yolo)
+                {
+                    if (bbox.prob >= net_confidence)
+                    {
 
-            if (stereocam)
-                frame = frame(cv::Rect(0, 0, frame.cols/2, frame.rows));
+                            //Add & update tracked objects
+                            int overlap_index = boxoverlapcenter(bbox, tracker_objects);
+                            if (overlap_index < 0) 
+                            {                    
+                               tracker_objects.push_back(bbox);
+                            }
+                            else
+                            {
+                               tracker_objects.at(overlap_index) = bbox;
+                            }
+                    }
+                }
 
-            
-             if((frame.rows > 0) && (frame.cols > 0))
-             {
-                 //resize
-                cv::resize(frame, frame, ref_size);
-
-                //update tracker objects..
+                //update tracker objects post detection..
                 tracker_engine.update_cur_bbox_vec(tracker_objects);
 
-                //update tracking position..
-               tracker_objects = tracker_engine.tracking_flow(frame);
-             }
+            }
+
+
+            //draw target area..
+            cv::rectangle(frame, target_tl, target_br, cv::Scalar(0xff, 0x00, 0x00), 4, 8, 0 );            
+
+            //
+            if (tracker_objects.size() > 0)
+            {
+                for (vector<bbox_t> ::iterator it = tracker_objects.begin(); it != tracker_objects.end(); it++)
+                {        
+                    bbox_t bbox = *it;
+
+                    cv::Point obj_box_tl = cv::Point(bbox.x, bbox.y);
+                    cv::Point obj_box_br = cv::Point(bbox.x + bbox.w, bbox.y + bbox.h);
+                    cv::rectangle(frame, obj_box_tl, obj_box_br, cv::Scalar(0x00, 0x00, 0xff), 4, 8, 0 );      
+
+                    //draw Confidence string
+                    std::stringstream strstrm;
+                    strstrm << "[" <<  std::fixed << std::setprecision(0) << bbox.prob * 100 << "%]";
+                    cv::putText(frame, strstrm.str(), obj_box_tl, cv::FONT_HERSHEY_PLAIN, 2,  cv::Scalar(0x00, 0xff, 0x00), 2);   
+
+                    //Line
+                    cv::Point track_end(bbox.x + bbox.w / 2, bbox.y + bbox.h / 2);
+                    cv::line(frame, target_center, track_end, color_track_line, 4, 8, 0 );       
+                    
+                    //correct speed & steering until target aquired
+                    cv::Rect2d target_rect(target_tl.x, target_tl.y, target_area, target_area);
+                    
+                    if (!target_rect.contains(track_end))
+                    {
+                        
+                       // set wheel_speed
+                        ws.left_speed = ws.right_speed = transform_value(ref_size.height - track_end.y, 0, ref_size.height, MIN_SPEED, MAX_SPEED);
+
+                        //correct for cross track error.
+                        int turn_correct = target_center.x - track_end.x;
+                        if (turn_correct < 0)
+                        {
+                            turn_correct = transform_value(abs(turn_correct) * 2, 0, ref_size.width, 0, MAX_SPEED-MIN_SPEED);
+                            ws.left_speed += turn_correct;
+                            ws.right_speed -= turn_correct;
+                        }
+                        else if (turn_correct > 0)
+                        {
+                            turn_correct = transform_value(abs(turn_correct) * 2, 0, ref_size.width, 0, MAX_SPEED-MIN_SPEED);
+                            ws.left_speed -= turn_correct;
+                            ws.right_speed += turn_correct;
+                        }
+
+                        //constrain within bounds.
+                        ws.left_speed = (ws.left_speed < MIN_SPEED) ? MIN_SPEED : (ws.left_speed > MAX_SPEED) ? MAX_SPEED : ws.left_speed;
+                        ws.right_speed = (ws.right_speed < MIN_SPEED) ? MIN_SPEED : (ws.right_speed > MAX_SPEED) ? MAX_SPEED : ws.right_speed;
+                    }
+                    else
+                    {
+                        std::cout << "ON TARGET!" << std::endl;
+                    }
+
+                }             
+            }
+            else
+            {
+                tracker_objects.push_back(bbox_start1);            
+            }
+
+            // show image with the tracked object
+            cv::imshow(window_name,frame);
+            
+            //get next frame and resize
+            usbcam.update_frames();
+            frame = usbcam.getRGBFrame();
+            
+            //MOTOR SPEED CONTROL..
+            if (usbok && serial_port.isopen)
+            {
+                stringstream serial_strstrm;
+                serial_strstrm << "SL" << ws.left_speed << "|";
+                serial_strstrm << "SR" << ws.right_speed << "|";
+                serial_port.writeString(serial_strstrm.str(), 250);
+                //cout << serial_string.str();
+            }
             
         }
         else
         {
-            //No more images from vide feed - Exit!
+            //No more images from vide feed - Exit
             break;
         }
         
         //wait for Key and quit on ESC button
-        int x = cv::waitKey(10);
+        int x = cv::waitKey(33);
         if(x == 27) //ESC = 27
         {
             break;       
         }
         
     }
+    
+    serial_port.close();
     
     return 0;
 }
