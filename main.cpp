@@ -327,7 +327,7 @@ int main(int argc, char** argv)
             usbcam.update_frames();
             frame = usbcam.getRGBFrame();
             
-            //MOTOR SPEED CONTROL..
+            //Continues Serial Port Motor Control System
             if (usbok && serial_port.isopen)
             {
                 stringstream serial_strstrm;
