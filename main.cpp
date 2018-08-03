@@ -277,13 +277,13 @@ int main(int argc, char** argv)
                         ws.left_speed = ((ws.left_speed > 0) && (ws.left_speed < MIN_SPEED)) ? MIN_SPEED : ((ws.left_speed < 0) && (ws.left_speed > -MIN_SPEED)) ? -MIN_SPEED : ws.left_speed;
                         ws.right_speed =  ((ws.right_speed > 0) && (ws.right_speed < MIN_SPEED)) ? MIN_SPEED : ((ws.right_speed < 0) && (ws.right_speed > -MIN_SPEED)) ? -MIN_SPEED : ws.right_speed;
 
-                        //constrain within bounds.
-                        ws.left_speed = (ws.left_speed < -MAX_SPEED) ? -MAX_SPEED : (ws.left_speed > MAX_SPEED) ? MAX_SPEED : ws.left_speed;
-                        ws.right_speed = (ws.right_speed < -MAX_SPEED) ? -MAX_SPEED : (ws.right_speed > MAX_SPEED) ? MAX_SPEED : ws.right_speed;
-
                         //apply gains
                         ws.left_speed *= speed_gain;
                         ws.right_speed *= speed_gain;
+
+                        //constrain within MAX_SPEED bounds.
+                        ws.left_speed = (ws.left_speed < -MAX_SPEED) ? -MAX_SPEED : (ws.left_speed > MAX_SPEED) ? MAX_SPEED : ws.left_speed;
+                        ws.right_speed = (ws.right_speed < -MAX_SPEED) ? -MAX_SPEED : (ws.right_speed > MAX_SPEED) ? MAX_SPEED : ws.right_speed;
 
                         
                     }
