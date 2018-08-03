@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f2"
+                   displayName="arduino_code"
+                   projectFiles="true"
+                   kind="ROOT">
+      <itemPath>arduino/speedtrack/speedtrack.ino</itemPath>
+    </logicalFolder>
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
@@ -136,6 +142,8 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="arduino/speedtrack/speedtrack.ino" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
@@ -218,6 +226,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="arduino/speedtrack/speedtrack.ino" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -304,6 +314,8 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="arduino/speedtrack/speedtrack.ino" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="8">
       </item>

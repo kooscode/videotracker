@@ -1,3 +1,24 @@
+/*
+ * App for detecting objects and steering vehicle towards Object
+ * 
+ * Copyright (C) 2017 Koos du Preez
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * 
+ * CREATED BY: Koos du Preez - kdupreez@hotmail.com
+ * 
+*/
 
 #include <cstdlib>
 #include <iostream>
@@ -34,6 +55,7 @@ struct wheelspeed
 
 int transform_value(int value, int min_value, int max_value, int min_transform,  int max_transform)
 {
+    //normalize input and output values.
     int value_scale = max_value - min_value;
     int transform_scale = max_transform - min_transform;
     
@@ -250,13 +272,14 @@ int main(int argc, char** argv)
                     //correct speed & steering until target aquired
                     cv::Rect2d target_rect(target_tl.x, target_tl.y, target_area, target_area);
                     
+                    //Motor Speed Control
                     if (!target_rect.contains(track_end))
                     {
                         
-                       // set wheel_speed
+                       // set initial proportional wheel_speed based on error.
                         ws.left_speed = ws.right_speed = transform_value(ref_size.height - track_end.y, 0, ref_size.height, MIN_SPEED, MAX_SPEED);
 
-                        //correct for cross track error.
+                        //adjust for cross track error.
                         int turn_correct = target_center.x - track_end.x;
                         if (turn_correct < 0)
                         {
@@ -273,7 +296,7 @@ int main(int argc, char** argv)
                             ws.left_speed = (ws.left_speed < MIN_SPEED) ? -MIN_SPEED : ws.left_speed;
                         }
 
-                        //correct for speed between 0 and MIN_SPEED
+                        //correct for speed between 0 and MIN_SPEED for both forward and reverse.
                         ws.left_speed = ((ws.left_speed > 0) && (ws.left_speed < MIN_SPEED)) ? MIN_SPEED : ((ws.left_speed < 0) && (ws.left_speed > -MIN_SPEED)) ? -MIN_SPEED : ws.left_speed;
                         ws.right_speed =  ((ws.right_speed > 0) && (ws.right_speed < MIN_SPEED)) ? MIN_SPEED : ((ws.right_speed < 0) && (ws.right_speed > -MIN_SPEED)) ? -MIN_SPEED : ws.right_speed;
 
