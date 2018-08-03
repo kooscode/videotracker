@@ -273,6 +273,8 @@ int main(int argc, char** argv)
                     cv::Rect2d target_rect(target_tl.x, target_tl.y, target_area, target_area);
                     
                     //Motor Speed Control
+                    //Super basic proportional controller
+                    //TODO - Add full PID later.. 
                     if (!target_rect.contains(track_end))
                     {
                         
