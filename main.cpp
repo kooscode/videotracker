@@ -37,6 +37,7 @@
 #include <darknet/src/yolo_v2_class.hpp>
 
 //Requires TerraClear Lib - static includes
+//get it from https://github.com/TerraClear/libterraclear
 #include "../libterraclear/src/error_base.hpp"
 #include "../libterraclear/src/appsettings.hpp"
 #include "../libterraclear/src/camera_usb.hpp"
