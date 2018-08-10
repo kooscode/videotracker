@@ -221,10 +221,8 @@ int main(int argc, char** argv)
             {
                 framecnt = net_framerate;
                 
-                //detect objects
-                vector<bbox_t> bboxes_detected_yolo = yolov2->detect(frame, net_threshold); 
-                
-                //loop through all detected objects & update tracking data.
+                //detect objects & update tracking data..
+                vector<bbox_t> bboxes_detected_yolo = yolov2->detect(frame, net_threshold);  
                 for (auto bbox : bboxes_detected_yolo)
                 {
                     if (bbox.prob >= net_confidence)
