@@ -42,28 +42,19 @@
 #include "../libterraclear/src/appsettings.hpp"
 #include "../libterraclear/src/camera_usb.hpp"
 #include "../libterraclear/src/basicserial.hpp"
+#include "../libterraclear/src/stopwatch.hpp"
+#include "basicpid.hpp"
 
 using namespace std;
 
 #define MAX_SPEED 255
-#define MIN_SPEED 125
+#define MIN_SPEED 80
 
 struct wheelspeed
 {
     int left_speed = 0;
     int right_speed = 0;
 };
-
-int transform_value(int value, int min_value, int max_value, int min_transform,  int max_transform)
-{
-    //normalize input and output values.
-    int value_scale = max_value - min_value;
-    int transform_scale = max_transform - min_transform;
-    
-    int retval = (((float)(value - min_value) / value_scale) * transform_scale) + min_transform;
-    
-    return retval;
-}
 
 int boxoverlapcenter(bbox_t srcbox, vector<bbox_t> boxes_all)
 {
@@ -87,9 +78,64 @@ int boxoverlapcenter(bbox_t srcbox, vector<bbox_t> boxes_all)
     return overlap_index;
 }
 
+// *** BASIC PID
+terraclear::stopwatch sw;
+
+double lastTime;
+double errSum = 0, lastErr = 0;
+double kp, ki, kd;
+
+double PID_Compute(double Input, double Setpoint)
+{
+    double retval = 0;
+
+    ///How long since we last calculated
+   double now = (double) sw.get_elapsed_s();
+  std::cout << "now:" << now << std::endl;
+   double timeChange = now - lastTime;
+
+   //P
+   double error = Setpoint - Input;
+  std::cout << "pErr:" << error << std::endl;
+   
+//TODO - Fix integral and derivative to calculate amount 
+//of integrations based on how many  counts of intervals has passed... 
+   //I
+   errSum += (error * timeChange);
+  std::cout << "iErr:" << errSum << std::endl;
+   
+   //D
+   double dErr = (error - lastErr) * timeChange * 10;
+   std::cout << "dErr:" << dErr << std::endl;
+//   dErr = max<double>(dErr, 0.00f);
+   
+   //CAlc PID Output
+   retval = kp * error + ki * errSum + kd * dErr;
+  
+   //Remember values
+   lastErr = error;
+   lastTime = now;
+   
+   return retval;
+}
+  
+void PID_Tune(double Kp, double Ki, double Kd)
+{
+   kp = Kp;
+   ki = Ki;
+   kd = Kd;
+}
+
+
+//  ** END BASIC PID
 
 int main(int argc, char** argv) 
 {
+    terraclear::basicpid pid_fwd(0,0,0,0);
+    
+    //start stopwatch
+    sw.reset();
+    bool _started = false;
     
     //SETUP SERIAL COMMS
 #ifdef __linux__
@@ -154,6 +200,12 @@ int main(int argc, char** argv)
     uint32_t net_framerate = _settings.getvalue_float("network-framerate");
     float speed_gain = _settings.getvalue_float("speed-gain");
     
+    //apply visual tracking
+    bool do_track = _settings.getvalue_float("do-track",false);
+    bool pid_enabled = false;
+    int missed_frames = 0;
+
+                        
     //Create new YoloV2 detector
     Detector* yolov2 = new Detector(net_config, net_weights);
      
@@ -184,17 +236,11 @@ int main(int argc, char** argv)
     cv::Point target_br(target_tl.x + target_area, target_tl.y + target_area);
     cv::Point target_center(target_tl.x + target_area / 2, target_tl.y + target_area / 2);
 
-    
-    //straight line tracking
-    bbox_t bbox_start1;
-    bbox_start1.x = 100;//ref_w / 2 - 50;
-    bbox_start1.y = 50;//ref_h / 2 - 50;
-    bbox_start1.w = 100;
-    bbox_start1.h = 100;
-    bbox_start1.track_id = 1;
-    cv::Point track_start1(bbox_start1.x + bbox_start1.w / 2, bbox_start1.y + bbox_start1.h / 2);
-
     uint32_t framecnt = 0;
+
+    //motor wheel speed..
+    wheelspeed ws;
+
     //Detection & tracking Loop..
     for ( ;; )
     {
@@ -202,16 +248,12 @@ int main(int argc, char** argv)
         // stop the program if no more images
         if((frame.rows > 0) && (frame.cols > 0))
         {
-            //motor wheel speed..
-            wheelspeed ws;
-
             //Scale image..
             cv::resize(frame, frame, ref_size);
 
             //track objects.
             tracker_objects = tracker_engine.tracking_flow(frame);
 
-            
             //Only do detection every X frames..
             if (framecnt > 0)
             {
@@ -250,76 +292,94 @@ int main(int argc, char** argv)
             //draw target area..
             cv::rectangle(frame, target_tl, target_br, cv::Scalar(0xff, 0x00, 0x00), 4, 8, 0 );            
 
-            //
             if (tracker_objects.size() > 0)
             {
-                for (vector<bbox_t> ::iterator it = tracker_objects.begin(); it != tracker_objects.end(); it++)
-                {        
-                    bbox_t bbox = *it;
+                //ensure stopwatch is running..
+                sw.start();
 
-                    cv::Point obj_box_tl = cv::Point(bbox.x, bbox.y);
-                    cv::Point obj_box_br = cv::Point(bbox.x + bbox.w, bbox.y + bbox.h);
-                    cv::rectangle(frame, obj_box_tl, obj_box_br, cv::Scalar(0x00, 0x00, 0xff), 4, 8, 0 );      
+                bbox_t bbox = tracker_objects.at(0);
 
-                    //draw Confidence string
-                    std::stringstream strstrm;
-                    strstrm << "[" <<  std::fixed << std::setprecision(0) << bbox.prob * 100 << "%]";
-                    cv::putText(frame, strstrm.str(), obj_box_tl, cv::FONT_HERSHEY_PLAIN, 2,  cv::Scalar(0x00, 0xff, 0x00), 2);   
+                cv::Point obj_box_tl = cv::Point(bbox.x, bbox.y);
+                cv::Point obj_box_br = cv::Point(bbox.x + bbox.w, bbox.y + bbox.h);
+                cv::rectangle(frame, obj_box_tl, obj_box_br, cv::Scalar(0x00, 0x00, 0xff), 4, 8, 0 );      
 
-                    //Line
-                    cv::Point track_end(bbox.x + bbox.w / 2, bbox.y + bbox.h / 2);
-                    cv::line(frame, target_center, track_end, color_track_line, 4, 8, 0 );       
-                    
-                    //correct speed & steering until target aquired
-                    cv::Rect2d target_rect(target_tl.x, target_tl.y, target_area, target_area);
-                    
-                    //Motor Speed Control
-                    //Super basic proportional controller
-                    //TODO - Add full PID later.. 
-                    if (!target_rect.contains(track_end))
+                //draw Confidence string
+                std::stringstream strstrm;
+                strstrm << "[" <<  std::fixed << std::setprecision(0) << bbox.prob * 100 << "%]";
+                cv::putText(frame, strstrm.str(), obj_box_tl, cv::FONT_HERSHEY_PLAIN, 2,  cv::Scalar(0x00, 0xff, 0x00), 2);   
+
+                //Line
+                cv::Point track_end(bbox.x + bbox.w / 2, bbox.y + bbox.h / 2);
+                cv::line(frame, target_center, track_end, color_track_line, 4, 8, 0 );       
+
+                //correct speed & steering until target aquired
+                cv::Rect2d target_rect(target_tl.x, target_tl.y, target_area, target_area);
+
+
+                int err_val = target_center.y - track_end.y;
+
+                //make sure PID is enabled AND error is larger than error margin pixels..
+                if ((pid_enabled) && (abs(err_val) > 40))
+                {
+//PID TUNE
+                    //apply PID to forward motion first
+                    PID_Tune(0.2, 0.1, 0.75);
+
+                   std::cout << "TARGET: " << track_end.y << std::endl;
+                   std::cout << "END: " << target_center.y << std::endl;
+                   std::cout << "ERR: " << err_val << std::endl;
+
+                    if (!_started)
                     {
-                        
-                       // set initial proportional wheel_speed based on error.
-                        ws.left_speed = ws.right_speed = transform_value(ref_size.height - track_end.y, 0, ref_size.height, MIN_SPEED, MAX_SPEED);
-
-                        //adjust for cross track error.
-                        int turn_correct = target_center.x - track_end.x;
-                        if (turn_correct < 0)
-                        {
-                            turn_correct = transform_value(abs(turn_correct), 0, ref_size.width, MIN_SPEED, MAX_SPEED) - MIN_SPEED;
-                            ws.left_speed += turn_correct;
-                            ws.right_speed -=  turn_correct;
-                            ws.right_speed = (ws.right_speed < MIN_SPEED) ? -MIN_SPEED : ws.right_speed;
-                        }
-                        else if (turn_correct > 0)
-                        {
-                            turn_correct = transform_value(abs(turn_correct), 0, ref_size.width, MIN_SPEED, MAX_SPEED) - MIN_SPEED;
-                            ws.right_speed += turn_correct;
-                            ws.left_speed -= turn_correct;
-                            ws.left_speed = (ws.left_speed < MIN_SPEED) ? -MIN_SPEED : ws.left_speed;
-                        }
-
-                        //correct for speed between 0 and MIN_SPEED for both forward and reverse.
-                        ws.left_speed = ((ws.left_speed > 0) && (ws.left_speed < MIN_SPEED)) ? MIN_SPEED : ((ws.left_speed < 0) && (ws.left_speed > -MIN_SPEED)) ? -MIN_SPEED : ws.left_speed;
-                        ws.right_speed =  ((ws.right_speed > 0) && (ws.right_speed < MIN_SPEED)) ? MIN_SPEED : ((ws.right_speed < 0) && (ws.right_speed > -MIN_SPEED)) ? -MIN_SPEED : ws.right_speed;
-
-                        //apply gains
-                        ws.left_speed *= speed_gain;
-                        ws.right_speed *= speed_gain;
-
-                        //constrain within MAX_SPEED bounds.
-                        ws.left_speed = (ws.left_speed < -MAX_SPEED) ? -MAX_SPEED : (ws.left_speed > MAX_SPEED) ? MAX_SPEED : ws.left_speed;
-                        ws.right_speed = (ws.right_speed < -MAX_SPEED) ? -MAX_SPEED : (ws.right_speed > MAX_SPEED) ? MAX_SPEED : ws.right_speed;
-
-                        
+                        sw.reset();
+                        _started = true;
                     }
 
-                }             
+                    double pid_value = PID_Compute(track_end.y, target_center.y);
+
+                   std::cout << "pid_value: " << pid_value << std::endl;
+
+                    int tmp_speed = pid_fwd.domain_transform(abs(pid_value), 0.00f, ref_size.height, MIN_SPEED, MAX_SPEED);
+
+                    ws.left_speed = ws.right_speed = (pid_value > 0) ? tmp_speed: -tmp_speed;
+
+                    std::cout << "speed: " <<  ws.left_speed << std::endl;
+                    std::cout << "******\n";
+
+                }
+                else 
+                {
+                    if (abs(err_val) > 40)
+                    {
+                        sw.stop();
+                        sw.reset();
+                        _started = false; 
+                        
+                        errSum = lastErr = lastTime = 0;
+                    }
+                    
+                    ws.left_speed = ws.right_speed = 0;
+                }
+
+                missed_frames = 0;
+
             }
             else
             {
-                tracker_objects.push_back(bbox_start1);            
+                //time is not running while nothing detected.. for more than 10 frames
+                if (missed_frames > 10)
+                {
+                    sw.stop();
+                    sw.reset();
+                    _started = false;
+                    ws.left_speed = ws.right_speed = 0;
+                    errSum = lastErr = lastTime = 0;
+
+                }
+
+                missed_frames++;
             }
+ 
 
             // show image with the tracked object
             cv::imshow(window_name,frame);
@@ -344,7 +404,6 @@ int main(int argc, char** argv)
                     serial_strstrm << "SRR" << abs(ws.right_speed) << std::endl;
                        
                 serial_port.writeString(serial_strstrm.str(), 250);
-                cout << serial_strstrm.str() << std::endl;
             }
             
         }
@@ -359,6 +418,23 @@ int main(int argc, char** argv)
         if(x == 27) //ESC = 27
         {
             break;       
+        }
+        else if (x == 112) //p = PID toggle;
+        {
+            pid_enabled = !pid_enabled;
+            std::cout << "PID: " << pid_enabled << std::endl;
+            
+            sw.stop();
+            sw.reset();
+            _started = false;
+            ws.left_speed = ws.right_speed = 0;
+             errSum = lastErr = lastTime = 0;
+
+            
+        }
+        else if (x > 0)
+        {
+            std::cout << "key = " << x << std::endl;
         }
         
     }

@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <logicalFolder name="f2"
-                   displayName="arduino_code"
-                   projectFiles="true"
-                   kind="ROOT">
+    <logicalFolder name="f2" displayName="arduino_code" projectFiles="true">
       <itemPath>arduino/speedtrack/speedtrack.ino</itemPath>
     </logicalFolder>
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>basicpid.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="libterraclear" projectFiles="true">
       <logicalFolder name="f1" displayName="appsettings" projectFiles="true">
@@ -32,6 +30,10 @@
         <itemPath>../libterraclear/src/basicserial.cpp</itemPath>
         <itemPath>../libterraclear/src/basicserial.hpp</itemPath>
       </logicalFolder>
+      <logicalFolder name="f5" displayName="stopwatch" projectFiles="true">
+        <itemPath>../libterraclear/src/stopwatch.cpp</itemPath>
+        <itemPath>../libterraclear/src/stopwatch.hpp</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -40,6 +42,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>basicpid.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -69,7 +72,6 @@
           <standard>8</standard>
           <incDir>
             <pElem>/home/koos/ml</pElem>
-            <pElem>/home/kdupreez/sources</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
@@ -142,7 +144,15 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../libterraclear/src/stopwatch.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../libterraclear/src/stopwatch.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="arduino/speedtrack/speedtrack.ino" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="basicpid.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="basicpid.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -227,7 +237,15 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../libterraclear/src/stopwatch.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../libterraclear/src/stopwatch.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="arduino/speedtrack/speedtrack.ino" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="basicpid.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="basicpid.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -315,7 +333,15 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../libterraclear/src/stopwatch.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../libterraclear/src/stopwatch.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="arduino/speedtrack/speedtrack.ino" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="basicpid.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="basicpid.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="8">
       </item>

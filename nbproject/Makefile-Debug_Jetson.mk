@@ -41,6 +41,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/e1dda48/camera_file.o \
 	${OBJECTDIR}/_ext/e1dda48/camera_usb.o \
 	${OBJECTDIR}/_ext/e1dda48/error_base.o \
+	${OBJECTDIR}/_ext/e1dda48/stopwatch.o \
+	${OBJECTDIR}/basicpid.o \
 	${OBJECTDIR}/main.o
 
 
@@ -99,6 +101,16 @@ ${OBJECTDIR}/_ext/e1dda48/error_base.o: ../libterraclear/src/error_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/home/nvidia/ml `pkg-config --cflags opencv` `pkg-config --cflags libserialport` `pkg-config --cflags jsoncpp` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/error_base.o ../libterraclear/src/error_base.cpp
+
+${OBJECTDIR}/_ext/e1dda48/stopwatch.o: ../libterraclear/src/stopwatch.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/home/nvidia/ml `pkg-config --cflags opencv` `pkg-config --cflags libserialport` `pkg-config --cflags jsoncpp` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/stopwatch.o ../libterraclear/src/stopwatch.cpp
+
+${OBJECTDIR}/basicpid.o: basicpid.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/home/nvidia/ml `pkg-config --cflags opencv` `pkg-config --cflags libserialport` `pkg-config --cflags jsoncpp` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/basicpid.o basicpid.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
