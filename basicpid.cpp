@@ -20,8 +20,9 @@ namespace terraclear
         //normalize input and output values.
         double from_scale = from_max - from_min;
         double to_scale = to_max - to_min;
+        double from_rebased =  (clip_value <= from_min) ? clip_value : clip_value - from_min;
 
-        double retval = (((clip_value - from_min) / from_scale) * to_scale) + to_min;
+        double retval = ((from_rebased / from_scale) * to_scale) + to_min;
 
         return retval;
     }
