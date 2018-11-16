@@ -22,7 +22,7 @@ namespace terraclear
         double to_scale = to_max - to_min;
         
         //rebase the constrained value and prevent a divide by zero if from_value was constrained to from_min
-        double from_rebased =  (from_constrained <= from_min) ? from_constrained : from_constrained - from_min;
+        double from_rebased =  (from_constrained <= from_min) ? from_min : from_constrained - from_min;
 
         //do the [from -> to] domain transform..
         double retval = ((from_rebased / from_scale) * to_scale) + to_min;
