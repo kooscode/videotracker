@@ -14,13 +14,13 @@ namespace terraclear
     
     double basicpid::domain_transform(double from_value, double from_min, double from_max, double to_min,  double to_max)
     {
-        //clip input value to max/min
-        double clip_value = std::min(std::max(from_min, from_value), from_max);;
+        //constrain input value to fit between from_max and from_min
+        double from_constrained = std::min(std::max(from_min, from_value), from_max);;
 
         //normalize input and output values.
         double from_scale = from_max - from_min;
         double to_scale = to_max - to_min;
-        double from_rebased =  (clip_value <= from_min) ? clip_value : clip_value - from_min;
+        double from_rebased =  (from_constrained <= from_min) ? from_constrained : from_constrained - from_min;
 
         double retval = ((from_rebased / from_scale) * to_scale) + to_min;
 
