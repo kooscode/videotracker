@@ -17,7 +17,7 @@ namespace terraclear
         //constrain input value to fit between from_max and from_min
         double from_constrained = std::min(std::max(from_min, from_value), from_max);
         
-        //normalize input and output values.
+        //rebase input and output values to be a zero based scale. 
         double from_scale = from_max - from_min;
         double to_scale = to_max - to_min;
         
