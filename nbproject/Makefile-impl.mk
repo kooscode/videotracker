@@ -27,11 +27,11 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 PROJECTNAME=videotracker
 
 # Active Configuration
-DEFAULTCONF=Debug_Linux_
+DEFAULTCONF=Debug_Linux
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug_Linux_ Release Debug_Jetson 
+ALLCONFS=Debug_Linux Release Debug_Linux_cv4 
 
 
 # build

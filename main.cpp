@@ -34,15 +34,18 @@
 #define OPENCV
 #define TRACK_OPTFLOW
 #define GPU
-#include <darknet/src/yolo_v2_class.hpp>
+#include "darknet/include/yolo_v2_class.hpp"
 
 //Requires TerraClear Lib - static includes
 //get it from https://github.com/TerraClear/libterraclear
-#include "../libterraclear/src/error_base.hpp"
-#include "../libterraclear/src/appsettings.hpp"
-#include "../libterraclear/src/camera_usb.hpp"
-#include "../libterraclear/src/basicserial.hpp"
-#include "../libterraclear/src/stopwatch.hpp"
+#include "libterraclear/src/error_base.hpp"
+#include "libterraclear/src/appsettings.hpp"
+#include "libterraclear/src/camera_usb.hpp"
+#include "libterraclear/src/stopwatch.hpp"
+#include "libterraclear/src/basicserial.hpp"
+
+
+//locals
 #include "basicpid.hpp"
 
 using namespace std;
@@ -227,7 +230,7 @@ int main(int argc, char** argv)
     terraclear::camera_usb usbcam(stoi(argv[1]));
     
     //frame capture first Image
-    usbcam.update_frames();
+    usbcam.frame_update();
     cv::Mat frame = usbcam.getRGBFrame();
     
     //calculate target area square
@@ -385,7 +388,7 @@ int main(int argc, char** argv)
             cv::imshow(window_name,frame);
             
             //get next frame and resize
-            usbcam.update_frames();
+            usbcam.frame_update();
             frame = usbcam.getRGBFrame();
             
             //Continues Serial Port Motor Control System

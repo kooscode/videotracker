@@ -41,6 +41,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/e1dda48/camera_file.o \
 	${OBJECTDIR}/_ext/e1dda48/camera_usb.o \
 	${OBJECTDIR}/_ext/e1dda48/error_base.o \
+	${OBJECTDIR}/_ext/e1dda48/filetools.o \
 	${OBJECTDIR}/_ext/e1dda48/stopwatch.o \
 	${OBJECTDIR}/basicpid.o \
 	${OBJECTDIR}/main.o
@@ -99,6 +100,11 @@ ${OBJECTDIR}/_ext/e1dda48/error_base.o: ../libterraclear/src/error_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/error_base.o ../libterraclear/src/error_base.cpp
+
+${OBJECTDIR}/_ext/e1dda48/filetools.o: ../libterraclear/src/filetools.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/filetools.o ../libterraclear/src/filetools.cpp
 
 ${OBJECTDIR}/_ext/e1dda48/stopwatch.o: ../libterraclear/src/stopwatch.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48

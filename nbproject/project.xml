@@ -12,7 +12,7 @@
             <sourceRootList/>
             <confList>
                 <confElem>
-                    <name>Debug_Linux_</name>
+                    <name>Debug_Linux</name>
                     <type>1</type>
                 </confElem>
                 <confElem>
@@ -20,7 +20,7 @@
                     <type>1</type>
                 </confElem>
                 <confElem>
-                    <name>Debug_Jetson</name>
+                    <name>Debug_Linux_cv4</name>
                     <type>1</type>
                 </confElem>
             </confList>

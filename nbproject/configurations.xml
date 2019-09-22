@@ -34,6 +34,10 @@
         <itemPath>../libterraclear/src/stopwatch.cpp</itemPath>
         <itemPath>../libterraclear/src/stopwatch.hpp</itemPath>
       </logicalFolder>
+      <logicalFolder name="f6" displayName="tools" projectFiles="true">
+        <itemPath>../libterraclear/src/filetools.cpp</itemPath>
+        <itemPath>../libterraclear/src/filetools.hpp</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -61,7 +65,7 @@
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
-    <conf name="Debug_Linux_" type="1">
+    <conf name="Debug_Linux" type="1">
       <toolsSet>
         <compilerSet>default</compilerSet>
         <dependencyChecking>true</dependencyChecking>
@@ -71,16 +75,18 @@
         <ccTool>
           <standard>8</standard>
           <incDir>
-            <pElem>/home/koos/ml</pElem>
+            <pElem>..</pElem>
+            <pElem>/data/sources</pElem>
           </incDir>
+          <commandLine>-DTC_USE_SERIAL</commandLine>
         </ccTool>
         <linkerTool>
           <commandlineTool>g++</commandlineTool>
           <linkerLibItems>
-            <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
-            <linkerLibFileItem>/home/koos/ml/darknet/darknet.so</linkerLibFileItem>
+            <linkerOptionItem>`pkg-config --libs opencv4`</linkerOptionItem>
             <linkerOptionItem>`pkg-config --libs jsoncpp`</linkerOptionItem>
             <linkerOptionItem>`pkg-config --libs libserialport`</linkerOptionItem>
+            <linkerLibLibItem>darknet</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
@@ -143,6 +149,10 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../libterraclear/src/filetools.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../libterraclear/src/filetools.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../libterraclear/src/stopwatch.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -237,6 +247,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../libterraclear/src/filetools.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../libterraclear/src/filetools.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../libterraclear/src/stopwatch.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../libterraclear/src/stopwatch.hpp" ex="false" tool="3" flavor2="0">
@@ -250,7 +264,7 @@
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
-    <conf name="Debug_Jetson" type="1">
+    <conf name="Debug_Linux_cv4" type="1">
       <toolsSet>
         <compilerSet>default</compilerSet>
         <dependencyChecking>true</dependencyChecking>
@@ -260,23 +274,25 @@
         <ccTool>
           <standard>8</standard>
           <incDir>
-            <pElem>/home/nvidia/ml</pElem>
+            <pElem>..</pElem>
+            <pElem>/data/sources</pElem>
           </incDir>
+          <commandLine>-DTC_USE_SERIAL</commandLine>
         </ccTool>
         <linkerTool>
           <commandlineTool>g++</commandlineTool>
           <linkerLibItems>
-            <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
-            <linkerLibFileItem>/home/nvidia/ml/darknet/darknet.so</linkerLibFileItem>
-            <linkerOptionItem>`pkg-config --libs libserialport`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs opencv4`</linkerOptionItem>
             <linkerOptionItem>`pkg-config --libs jsoncpp`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs libserialport`</linkerOptionItem>
+            <linkerLibLibItem>darknet</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
       <item path="../libterraclear/src/appsettings.cpp"
             ex="false"
             tool="1"
-            flavor2="0">
+            flavor2="8">
       </item>
       <item path="../libterraclear/src/appsettings.hpp"
             ex="false"
@@ -286,7 +302,7 @@
       <item path="../libterraclear/src/basicserial.cpp"
             ex="false"
             tool="1"
-            flavor2="0">
+            flavor2="8">
       </item>
       <item path="../libterraclear/src/basicserial.hpp"
             ex="false"
@@ -296,7 +312,7 @@
       <item path="../libterraclear/src/camera_base.cpp"
             ex="false"
             tool="1"
-            flavor2="0">
+            flavor2="8">
       </item>
       <item path="../libterraclear/src/camera_base.hpp"
             ex="false"
@@ -306,7 +322,7 @@
       <item path="../libterraclear/src/camera_file.cpp"
             ex="false"
             tool="1"
-            flavor2="0">
+            flavor2="8">
       </item>
       <item path="../libterraclear/src/camera_file.hpp"
             ex="false"
@@ -316,7 +332,7 @@
       <item path="../libterraclear/src/camera_usb.cpp"
             ex="false"
             tool="1"
-            flavor2="0">
+            flavor2="8">
       </item>
       <item path="../libterraclear/src/camera_usb.hpp"
             ex="false"
@@ -326,20 +342,24 @@
       <item path="../libterraclear/src/error_base.cpp"
             ex="false"
             tool="1"
-            flavor2="0">
+            flavor2="8">
       </item>
       <item path="../libterraclear/src/error_base.hpp"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../libterraclear/src/stopwatch.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../libterraclear/src/filetools.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../libterraclear/src/filetools.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../libterraclear/src/stopwatch.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../libterraclear/src/stopwatch.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="arduino/speedtrack/speedtrack.ino" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="basicpid.cpp" ex="false" tool="1" flavor2="0">
+      <item path="basicpid.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="basicpid.hpp" ex="false" tool="3" flavor2="0">
       </item>
