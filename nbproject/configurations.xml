@@ -83,7 +83,7 @@
         <linkerTool>
           <commandlineTool>g++</commandlineTool>
           <linkerLibItems>
-            <linkerOptionItem>`pkg-config --libs opencv4`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
             <linkerOptionItem>`pkg-config --libs jsoncpp`</linkerOptionItem>
             <linkerOptionItem>`pkg-config --libs libserialport`</linkerOptionItem>
             <linkerLibLibItem>darknet</linkerLibLibItem>

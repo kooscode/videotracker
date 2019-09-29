@@ -61,7 +61,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=`pkg-config --libs opencv4` `pkg-config --libs jsoncpp` `pkg-config --libs libserialport` -ldarknet  
+LDLIBSOPTIONS=`pkg-config --libs opencv` `pkg-config --libs jsoncpp` `pkg-config --libs libserialport` -ldarknet  
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -74,52 +74,52 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/videotracker: ${OBJECTFILES}
 ${OBJECTDIR}/_ext/e1dda48/appsettings.o: ../libterraclear/src/appsettings.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv4` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/appsettings.o ../libterraclear/src/appsettings.cpp
+	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/appsettings.o ../libterraclear/src/appsettings.cpp
 
 ${OBJECTDIR}/_ext/e1dda48/basicserial.o: ../libterraclear/src/basicserial.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv4` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/basicserial.o ../libterraclear/src/basicserial.cpp
+	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/basicserial.o ../libterraclear/src/basicserial.cpp
 
 ${OBJECTDIR}/_ext/e1dda48/camera_base.o: ../libterraclear/src/camera_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv4` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/camera_base.o ../libterraclear/src/camera_base.cpp
+	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/camera_base.o ../libterraclear/src/camera_base.cpp
 
 ${OBJECTDIR}/_ext/e1dda48/camera_file.o: ../libterraclear/src/camera_file.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv4` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/camera_file.o ../libterraclear/src/camera_file.cpp
+	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/camera_file.o ../libterraclear/src/camera_file.cpp
 
 ${OBJECTDIR}/_ext/e1dda48/camera_usb.o: ../libterraclear/src/camera_usb.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv4` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/camera_usb.o ../libterraclear/src/camera_usb.cpp
+	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/camera_usb.o ../libterraclear/src/camera_usb.cpp
 
 ${OBJECTDIR}/_ext/e1dda48/error_base.o: ../libterraclear/src/error_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv4` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/error_base.o ../libterraclear/src/error_base.cpp
+	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/error_base.o ../libterraclear/src/error_base.cpp
 
 ${OBJECTDIR}/_ext/e1dda48/filetools.o: ../libterraclear/src/filetools.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv4` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/filetools.o ../libterraclear/src/filetools.cpp
+	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/filetools.o ../libterraclear/src/filetools.cpp
 
 ${OBJECTDIR}/_ext/e1dda48/stopwatch.o: ../libterraclear/src/stopwatch.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv4` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/stopwatch.o ../libterraclear/src/stopwatch.cpp
+	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/stopwatch.o ../libterraclear/src/stopwatch.cpp
 
 ${OBJECTDIR}/basicpid.o: basicpid.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv4` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/basicpid.o basicpid.cpp
+	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/basicpid.o basicpid.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv4` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -I.. -I/data/sources `pkg-config --cflags opencv` `pkg-config --cflags jsoncpp` `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

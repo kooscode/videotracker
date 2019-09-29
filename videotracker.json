@@ -1,6 +1,6 @@
 {
-    "network-config": "/home/koos/ml/prod/cfg/net-yolov2-voc-spongebob.cfg",
-    "network-weights": "/home/koos/ml/yolotrain-spongebob/weights/net-yolov2-voc-train_33900.weights",
+    "network-config": "/data/ml/train/spongebob/cfg/yolov3-tiny.cfg",
+    "network-weights": "/data/ml/train/spongebob/weights-yolov3-tiny/yolov3-tiny_160000.weights",
     "network-threshold": 0.20,
     "network-confidence": 0.75,
     "network-min-area": 100,    

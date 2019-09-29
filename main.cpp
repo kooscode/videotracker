@@ -51,7 +51,7 @@
 using namespace std;
 
 #define MAX_SPEED 255
-#define MIN_SPEED 80
+#define MIN_SPEED 90
 
 struct wheelspeed
 {
@@ -101,8 +101,8 @@ double PID_Compute(double Input, double Setpoint)
    double error = Setpoint - Input;
   std::cout << "pErr:" << error << std::endl;
    
-//TODO - Fix integral and derivative to calculate amount 
-//of integrations based on how many  counts of intervals has passed... 
+//TODO - Fix integral and derivative to interpolate 
+// integrations based on how many  counts of intervals has passed... 
    //I
    errSum += (error * timeChange);
   std::cout << "iErr:" << errSum << std::endl;
@@ -205,7 +205,7 @@ int main(int argc, char** argv)
     
     //apply visual tracking
     bool do_track = _settings.getvalue_float("do-track",false);
-    bool pid_enabled = false;
+    bool pid_enabled = true;
     int missed_frames = 0;
 
                         
@@ -319,18 +319,19 @@ int main(int argc, char** argv)
                 cv::Rect2d target_rect(target_tl.x, target_tl.y, target_area, target_area);
 
 
-                int err_val = target_center.y - track_end.y;
+                int err_val_x = target_center.x - track_end.x;
+                int err_val_y = target_center.y - track_end.y;
+                
+                int error_window = target_area / 2;
 
                 //make sure PID is enabled AND error is larger than error margin pixels..
-                if ((pid_enabled) && (abs(err_val) > 40))
+                if ((pid_enabled) && ((abs(err_val_y) + abs(err_val_x)) / 2 > error_window))
                 {
-//PID TUNE
-                    //apply PID to forward motion first
-                    PID_Tune(0.2, 0.1, 0.75);
+                   PID_Tune(0.2, 0.1, 0.75);
 
                    std::cout << "TARGET: " << track_end.y << std::endl;
                    std::cout << "END: " << target_center.y << std::endl;
-                   std::cout << "ERR: " << err_val << std::endl;
+                   std::cout << "ERR: " << err_val_y << std::endl;
 
                     if (!_started)
                     {
@@ -345,25 +346,28 @@ int main(int argc, char** argv)
                     int tmp_speed = pid_fwd.domain_transform(abs(pid_value), 0.00f, ref_size.height, MIN_SPEED, MAX_SPEED);
 
                     ws.left_speed = ws.right_speed = (pid_value > 0) ? tmp_speed: -tmp_speed;
+                    
+                    if (track_end.x > target_center.x + error_window)
+                    {
+                        ws.right_speed = -ws.right_speed;
+                    }
+                    else if (track_end.x < target_center.x - error_window)
+                    {
+                        ws.left_speed = -ws.left_speed;
+                    }
 
                     std::cout << "speed: " <<  ws.left_speed << std::endl;
                     std::cout << "******\n";
 
                 }
-                else 
+                else
                 {
-                    if (abs(err_val) > 40)
-                    {
-                        sw.stop();
-                        sw.reset();
-                        _started = false; 
-                        
-                        errSum = lastErr = lastTime = 0;
-                    }
-                    
+                    sw.stop();
+                    sw.reset();
+                    _started = false;
                     ws.left_speed = ws.right_speed = 0;
+                    errSum = lastErr = lastTime = 0;
                 }
-
                 missed_frames = 0;
 
             }
